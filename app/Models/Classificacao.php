@@ -9,6 +9,18 @@ class Classificacao extends Model
 {
     use HasFactory;
 
-    protected $table = 'classificacao'; 
+    protected $table = 'classificacao';
+
+    protected $fillable = [
+        'time_id',
+        'pontos',
+        'qtd_gols',
+    ]; 
+
+    public function time(){
+
+        return $this->belongsTo(Time::class);
+
+    }
 
 }

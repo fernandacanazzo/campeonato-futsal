@@ -9,12 +9,18 @@ class Jogador extends Model
 {
     use HasFactory;
 
-    protected $table = 'jogadores';  
+    protected $table = 'jogadores';
 
-   /* public function time(){
+    protected $fillable = [
+        'nome',
+        'numero_camiseta',
+        'time_id',
+    ]; 
+
+    public function time(){
 
         return $this->belongsTo(Time::class);
 
-    }*/
+    }
 
 }
