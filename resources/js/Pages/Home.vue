@@ -1,6 +1,12 @@
 <script setup>
     import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
     import { Head } from '@inertiajs/vue3';
+
+function redireciona(url){
+
+    window.location='/'+url;
+}
+
 </script>
 
 <template>
@@ -16,15 +22,15 @@
             <div class="row-span-3 row-end-3 col-span-2 w-full">
                 <div style="background: white; height: 100%;">Classificacao</div></div>
               <div class="col-span-1 col-start-3">
-                <button class="w-60 bg-gray-300 hover:bg-gray-500 text-gray-800 font-bold py-2 px-4 hover:text-white rounded">
+                <button class="w-60 bg-gray-300 hover:bg-gray-500 text-gray-800 font-bold py-2 px-4 hover:text-white rounded" @click="redireciona('jogador')">
                   Jogadores
               </button></div>
               <div class="col-span-1 col-start-3">
-                <button class="w-60 bg-gray-300 hover:bg-gray-500 text-gray-800 font-bold py-2 px-4 hover:text-white rounded">
+                <button class="w-60 bg-gray-300 hover:bg-gray-500 text-gray-800 font-bold py-2 px-4 hover:text-white rounded" @click="redireciona('partid')">
                   Partidas
               </button></div>
               <div class="col-span-1 col-start-3">
-                <button class="w-60 bg-gray-300 hover:bg-gray-500 text-gray-800 font-bold py-2 px-4 hover:text-white rounded">
+                <button class="w-60 bg-gray-300 hover:bg-gray-500 text-gray-800 font-bold py-2 px-4 hover:text-white rounded" @click="redireciona('time')">
                   Times
               </button></div>         
           </div>
