@@ -1,3 +1,17 @@
+@import '@fortawesome/fontawesome-free/css/fontawesome.css';
+@import '@fortawesome/fontawesome-free/css/solid.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.border-bottom-gray-100{
+  border-bottom-color: rgb(243 244 246); 
+  border-bottom-width: 1px;
+}
+
+.border-bottom-gray-200{
+  border-bottom-color: rgb(229 231 235); 
+  border-bottom-width: 1px;
+}
