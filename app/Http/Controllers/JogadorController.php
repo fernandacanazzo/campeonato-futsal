@@ -18,7 +18,7 @@ class JogadorController extends Controller
     public function show(): Response
     {   
 
-        $jogadores = Jogador::all();
+        $jogadores = Jogador::with('time')->get();
 
         return Inertia::render('Jogador/Index',['jogadores'=>$jogadores]);
     }

@@ -6,6 +6,7 @@
     import InputLabel from '@/Components/InputLabel.vue';
     import TextInput from '@/Components/TextInput.vue';
     import PrimaryButton from '@/Components/PrimaryButton.vue';
+    import SecondaryButton from '@/Components/SecondaryButton.vue';
     import { ref } from 'vue';
     import axios from 'axios'
 
@@ -15,30 +16,50 @@
         },
     });
 
-    const jogador = {};
+    const jogador = {};   
 
     let showModal = ref(false);
     let alert_text = ref(null);
+    let times = ref(null);
+    let message = ref({});
     
     function adicionaJogador() {
-
-        let self = this;
 
         axios.post('/jogadores', jogador)
         .then(res => {
 
             this.showModal = false;
             this.alert_text = res.data.mensagem;
+            this.jogador = {};
 
         })
         .catch(error => {
 
-            this.showModal = false;
-            this.alert_text = error.response.data.mensagem;
+            //this.showModal = false;
+            //this.alert_text = error.response.data.mensagem;
+            //this.jogador = {};
+            this.message = error.response.data.errors;
+            console.log(error);
 
         })
 
     }
+
+    function buscaTimes() {
+
+        axios.get('/times')
+        .then(res => {
+
+            this.times = res.data.times;
+
+        })
+        .catch(error => {
+
+        })
+
+    }
+
+
 
 </script>
 
@@ -68,7 +89,7 @@
             autocomplete="nome"
             />
 
-            <!-- <InputError class="mt-2" :message="form.errors.nome" />-->
+            <!--<InputError class="mt-2" :message="form.errors.nome" />-->
         </div>
 
         <div class="mt-4">
@@ -84,30 +105,37 @@
             autocomplete="numero_camiseta"
             />
 
-            <!-- <InputError class="mt-2" :message="form.errors.nome" />-->
+            <InputError class="mt-2" :message="message.numero_camiseta[0]" />
         </div>
 
         <div class="mt-4">
 
             <InputLabel for="time_id" value="Time" />
             <select v-model="jogador.time_id" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full">
-              <option disabled value="">Selecionar...</option>
-              <option value="1">Palmeiras</option>
-          </select>
+                <option disabled value="">Selecionar...</option>
+                <option v-for="(element, index) in times" 
+                :value="element.id" 
+                :key="element.id">
+                {{element.nome}}
+                </option>
+            </select>
 
-      </div>
-      <div class="flex items-center justify-end mt-8">
+        </div>
+  <div class="flex items-center justify-end mt-8">
 
-        <PrimaryButton class="ms-4" @click="adicionaJogador(jogador)">
-            Salvar
-        </PrimaryButton>
+    <SecondaryButton class="ms-4" @click="showModal = false">
+        Fechar
+    </SecondaryButton>
 
-    </div>
+    <PrimaryButton class="ms-4" @click="adicionaJogador(jogador)">
+        Salvar
+    </PrimaryButton>
+
+</div>
 
 </Modal>
 
 <div class="container mx-auto mt-20 justify-items-center">
-
     <div class="m-auto bg-sky-100 border-sky-500 text-sky-700 border px-4 py-3 rounded relative mb-6 w-9/12" role="alert" v-if="alert_text != null">
         <div class="flex grid grid-rows-1 grid-cols-1 grid-flow-col gap-4">
           <p class="font-bold">{{alert_text}}</p>
@@ -118,7 +146,7 @@
   <div class="grid grid-rows-1 grid-cols-2 grid-flow-col gap-4 w-9/12 m-auto">
     <!--<div>-->
         <h2 class="text-3xl">Jogadores</h2>
-        <button class="justify-self-end bg-emerald-700 hover:bg-emerald-900 text-gray-100 font-bold py-2 px-4 hover:text-white rounded col-start-2"  @click="showModal = true">
+        <button class="justify-self-end bg-emerald-700 hover:bg-emerald-900 text-gray-100 font-bold py-2 px-4 hover:text-white rounded col-start-2"  @click="showModal = true; buscaTimes()">
           Novo
       </button>
       <!--</div>-->
@@ -127,6 +155,7 @@
             <tr>
               <th class=" px-4 py-2 border-bottom-gray-200">Id</th>
               <th class=" px-4 py-2 border-bottom-gray-200">Nome</th>
+              <th class=" px-4 py-2 border-bottom-gray-200">N&uacute;mero Camiseta</th>
               <th class=" px-4 py-2 border-bottom-gray-200">Time</th>
           </tr>
       </thead>
@@ -134,7 +163,8 @@
           <tr>
             <td class=" px-4 py-2">{{element.id}}</td>
             <td class=" px-4 py-2">{{element.nome}}</td>
-            <td class=" px-4 py-2">{{element.time_id}}</td>
+            <td class=" px-4 py-2">{{element.numero_camiseta}}</td>
+            <td class=" px-4 py-2">{{element.time.nome}}</td>
         </tr>
     </tbody>
 </table>

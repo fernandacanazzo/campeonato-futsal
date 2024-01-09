@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\JogadorController;
+use App\Http\Controllers\TimeController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -43,6 +44,8 @@ Route::middleware('auth')->group(function () {
     )->name('jogadores.show');
     Route::post('/jogadores', [JogadorController::class, 'store']
     )->name('jogadores.store');
+    Route::get('/times', [TimeController::class, 'show']
+    )->name('times.show');
 });
 
 require __DIR__.'/auth.php';

@@ -15,7 +15,9 @@ class Time extends Model
 
     protected $fillable = [
         'nome'
-    ]; 
+    ];
+
+    public $timestamps = FALSE;
 
     public function jogadores(): HasMany
     {
