@@ -16,12 +16,14 @@
         },
     });
 
-    const jogador = {};   
-
+    let jogador = {};
     let showModal = ref(false);
     let alert_text = ref(null);
     let times = ref(null);
     let message = ref({});
+    let jogadores = ref([]);
+
+    jogadores = props.jogadores;
     
     function adicionaJogador() {
 
@@ -31,6 +33,7 @@
             this.showModal = false;
             this.alert_text = res.data.mensagem;
             this.jogador = {};
+            jogadores.unshift(res.data.jogador[0]);
 
         })
         .catch(error => {
@@ -39,7 +42,6 @@
             //this.alert_text = error.response.data.mensagem;
             //this.jogador = {};
             this.message = error.response.data.errors;
-            console.log(error);
 
         })
 
@@ -58,7 +60,6 @@
         })
 
     }
-
 
 
 </script>
@@ -89,7 +90,7 @@
             autocomplete="nome"
             />
 
-            <!--<InputError class="mt-2" :message="form.errors.nome" />-->
+           <InputError class="mt-2" :message="message.nome" />
         </div>
 
         <div class="mt-4">
@@ -105,7 +106,7 @@
             autocomplete="numero_camiseta"
             />
 
-            <InputError class="mt-2" :message="message.numero_camiseta[0]" />
+            <InputError class="mt-2" :message="message.numero_camiseta" />
         </div>
 
         <div class="mt-4">
@@ -119,6 +120,8 @@
                 {{element.nome}}
                 </option>
             </select>
+
+            <InputError class="mt-2" :message="message.time_id" />
 
         </div>
   <div class="flex items-center justify-end mt-8">
@@ -159,7 +162,7 @@
               <th class=" px-4 py-2 border-bottom-gray-200">Time</th>
           </tr>
       </thead>
-      <tbody v-for="element in $page.props.jogadores" class="/*odd:bg-gray-50*/">
+      <tbody v-for="element in jogadores" class="/*odd:bg-gray-50*/">
           <tr>
             <td class=" px-4 py-2">{{element.id}}</td>
             <td class=" px-4 py-2">{{element.nome}}</td>

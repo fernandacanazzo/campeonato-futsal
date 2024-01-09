@@ -10,15 +10,28 @@ use App\Http\Middleware\HandleInertiaRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response as IlluminateResponse;
 use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\Collection;
 //use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class JogadorController extends Controller
 {
-    //
+
+    protected function getJogadores($id = ''): Collection
+    {   
+        
+        if(!empty($id))
+            $jogadores = Jogador::with('time')->where('id', $id)->get();
+        else
+            $jogadores = Jogador::with('time')->orderBy('jogadores.id', 'DESC')->get();
+
+        return $jogadores;
+
+    }
+
     public function show(): Response
     {   
 
-        $jogadores = Jogador::with('time')->get();
+        $jogadores = $this->getJogadores();
 
         return Inertia::render('Jogador/Index',['jogadores'=>$jogadores]);
     }
@@ -40,7 +53,9 @@ class JogadorController extends Controller
                 'time_id' => $request->time_id,
             ]);
 
-            return response(array("mensagem"=>"Jogador criado com sucesso."), 200)
+            $jogador = $this->getJogadores($jogador->id);
+
+            return response(array("mensagem"=>"Jogador criado com sucesso.", "jogador"=>$jogador), 200)
             ->header('Content-Type', 'text/plain');
 
         }catch (QueryException $ex){
