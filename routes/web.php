@@ -44,6 +44,8 @@ Route::middleware('auth')->group(function () {
     )->name('jogadores.show');
     Route::post('/jogadores', [JogadorController::class, 'store']
     )->name('jogadores.store');
+    Route::delete('/jogador/{id}', [JogadorController::class, 'destroy']
+    )->name('jogadores.destroy');
     Route::get('/times', [TimeController::class, 'show']
     )->name('times.show');
 });

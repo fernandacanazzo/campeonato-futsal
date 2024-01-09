@@ -18,7 +18,7 @@ class JogadorController extends Controller
 
     protected function getJogadores($id = ''): Collection
     {   
-        
+
         if(!empty($id))
             $jogadores = Jogador::with('time')->where('id', $id)->get();
         else
@@ -62,7 +62,27 @@ class JogadorController extends Controller
 
             return response(array("mensagem"=>"Erro ao inserir jogador no banco."), 500)
             ->header('Content-Type', 'text/plain');
-           
+
+        }
+
+    }
+
+    public function destroy(Request $request, string $id): IlluminateResponse
+    {
+
+        try {
+
+            $jogador = Jogador::find($id);
+            $jogador->delete();
+
+             return response(array("mensagem"=>"Jogador excluido com sucesso."), 200)
+            ->header('Content-Type', 'text/plain');
+
+        }catch (QueryException $ex){
+
+            return response(array("mensagem"=>"Erro ao excluir jogador no banco."), 500)
+            ->header('Content-Type', 'text/plain');
+
         }
 
     }
