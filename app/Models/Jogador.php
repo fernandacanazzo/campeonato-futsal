@@ -17,6 +17,8 @@ class Jogador extends Model
         'time_id',
     ]; 
 
+    public $timestamps = FALSE;
+
     public function time(){
 
         return $this->belongsTo(Time::class);

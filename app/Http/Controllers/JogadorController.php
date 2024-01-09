@@ -20,48 +20,36 @@ class JogadorController extends Controller
 
         $jogadores = Jogador::all();
 
-        //return Inertia::render('Account',['user'=>$user, 'account'=>$account]);
         return Inertia::render('Jogador/Index',['jogadores'=>$jogadores]);
     }
 
-    public function teste(): IlluminateResponse
+    public function store(Request $request): IlluminateResponse
     {   
 
-       return response(array("msg"=>'Hello World'), 200)
-                ->header('Content-Type', 'text/plain');
-    }
-/*
-    public function update(User $user, Request $request): RedirectResponse
-    {   
+        $request->validate([
+            'nome' => 'required|string|max:255',
+            'numero_camiseta' => 'required|int',
+            'time_id' => 'required|int',
+        ]);
 
+        try {
 
-       $validated = $request->validate([
-        'title' => 'string|max:255',
-        'description' => 'string',
-        'url' => 'string|max:255|url',
-        'image' => '',
-            //'user_id' => 'int|required'
-    ]);
+            $jogador = Jogador::create([
+                'nome' => $request->nome,
+                'numero_camiseta' => $request->numero_camiseta,
+                'time_id' => $request->time_id,
+            ]);
 
-       try {
+            return response(array("mensagem"=>"Jogador criado com sucesso."), 200)
+            ->header('Content-Type', 'text/plain');
 
-        $path = Storage::putFile('public', $request->file('image'));
-        $path = str_replace("public/", "", $path);
+        }catch (QueryException $ex){
 
-        $manager = new ImageManager(new Driver());
-        $image = $manager->read(public_path("storage".DIRECTORY_SEPARATOR.$path))->resizeDown(300,300)->save();
+            return response(array("mensagem"=>"Erro ao inserir jogador no banco."), 500)
+            ->header('Content-Type', 'text/plain');
+           
+        }
 
-        $item_image = array("image"=>$path);
-        $validated = array_merge($validated, $item_image);
-
-        $user->account()->update($validated);
-
-        return redirect()->back()->with('success', "Conta atualizada");
-
-    }catch (QueryException $ex){
-
-        return redirect()->back()->with('error', $ex->getMessage());
     }
 
-}*/
 }
