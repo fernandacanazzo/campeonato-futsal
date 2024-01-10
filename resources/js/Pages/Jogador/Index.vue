@@ -34,6 +34,8 @@
         switch(acao) {
 
             case 'adicionar':
+
+            jogador.time_id = jogador.time.id;
             axios.post('/jogadores', jogador)
             .then(res => {
 
@@ -53,7 +55,7 @@
 
             case 'editar':
 
-
+            jogador.time_id = jogador.time.id;
             axios.patch('/jogador/'+jogador.id, jogador)
             .then(res => {
 
@@ -172,16 +174,16 @@
     <div class="mt-4" v-if="modal_action != 'deletar'">
 
         <InputLabel for="time_id" value="Time" />
-        <select v-model="jogador.time_id" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full">
+        <select v-model="jogador.time" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full">
             <option disabled value="">Selecionar...</option>
             <option v-for="(element, index) in times" 
-            :value="element.id" 
+            :value="element" 
             :key="element.id">
             {{element.nome}}
             </option>
         </select>
 
-        <InputError class="mt-2" :message="message.time_id" />
+        <InputError class="mt-2" :message="message.time" />
 
     </div>
     <div class="flex items-center justify-end mt-8">
