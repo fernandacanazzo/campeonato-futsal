@@ -40,6 +40,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    //jogadores
     Route::get('/jogadores', [JogadorController::class, 'show']
     )->name('jogadores.show');
     Route::post('/jogadores', [JogadorController::class, 'store']
@@ -48,8 +49,17 @@ Route::middleware('auth')->group(function () {
     )->name('jogadores.destroy');
     Route::patch('/jogador/{id}', [JogadorController::class, 'update']
     )->name('jogadores.update');
+    //times
+    Route::get('/times/busca', [TimeController::class, 'busca']
+    )->name('times.busca');//para preencher as opções do select na tela de jogadores
     Route::get('/times', [TimeController::class, 'show']
     )->name('times.show');
+    Route::post('/times', [TimeController::class, 'store']
+    )->name('times.store');
+    Route::delete('/time/{id}', [TimeController::class, 'destroy']
+    )->name('times.destroy');
+    Route::patch('/time/{id}', [TimeController::class, 'update']
+    )->name('times.update');
 });
 
 require __DIR__.'/auth.php';

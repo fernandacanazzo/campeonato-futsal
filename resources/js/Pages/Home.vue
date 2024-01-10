@@ -26,11 +26,11 @@ function redireciona(url){
                   Jogadores
               </button></div>
               <div class="col-span-1 col-start-3">
-                <button class="w-60 bg-gray-300 hover:bg-gray-700 text-gray-800 font-bold py-2 px-4 hover:text-white rounded" @click="redireciona('partida')">
+                <button class="w-60 bg-gray-300 hover:bg-gray-700 text-gray-800 font-bold py-2 px-4 hover:text-white rounded" @click="redireciona('partidas')">
                   Partidas
               </button></div>
               <div class="col-span-1 col-start-3">
-                <button class="w-60 bg-gray-300 hover:bg-gray-700 text-gray-800 font-bold py-2 px-4 hover:text-white rounded" @click="redireciona('time')">
+                <button class="w-60 bg-gray-300 hover:bg-gray-700 text-gray-800 font-bold py-2 px-4 hover:text-white rounded" @click="redireciona('times')">
                   Times
               </button></div>         
           </div>
