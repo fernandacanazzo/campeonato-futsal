@@ -19,8 +19,9 @@
     let jogador = {};
     let showModal = ref(false);
     let showModalDel = ref(false);
-    let jogador_id = ref(0);
     let alert_text = ref(null);
+    let modal_title = ref(null);
+    let modal_action = ref(null);
     let modal_error_text = ref(null);
     let times = ref(null);
     let message = ref({});
@@ -28,43 +29,64 @@
 
     jogadores = props.jogadores;
     
-    function adicionaJogador() {
+    function salvaAcao(acao, jogador) {
 
-        axios.post('/jogadores', jogador)
-        .then(res => {
+        switch(acao) {
 
-            this.showModal = false;
-            this.alert_text = res.data.mensagem;
-            this.jogador = {};
-            jogadores.unshift(res.data.jogador[0]);
+            case 'adicionar':
+            axios.post('/jogadores', jogador)
+            .then(res => {
 
-        })
-        .catch(error => {
+                this.showModal = false;
+                this.alert_text = res.data.mensagem;
+                this.jogador = {};
+                jogadores.unshift(res.data.jogador[0]);
 
-            this.modal_error_text = error.response.data.message;
-            this.message = error.response.data.errors;
+            })
+            .catch(error => {
 
-        })
+                this.modal_error_text = error.response.data.message;
+                this.message = error.response.data.errors;
 
-    }
+            })
+            break;
 
-    function deletaJogador(id) {
+            case 'editar':
+            axios.patch('/jogador/'+jogador.id, jogador)
+            .then(res => {
 
-        axios.delete('/jogador/'+id)
-        .then(res => {
+                this.showModal = false;
+                this.alert_text = res.data.mensagem;
+                this.jogador = {};
 
-            this.showModalDel = false;
-            this.alert_text = res.data.mensagem;
-            jogadores.splice(jogadores.findIndex(item => item.id === id), 1);
+            })
+            .catch(error => {
 
-        })
-        .catch(error => {
+                this.modal_error_text = error.response.data.message;
+                this.message = error.response.data.errors;
 
-           this.modal_error_text = error.response.data.message;
+            })
+            break;
 
-        })
+            case 'deletar':
+            axios.delete('/jogador/'+jogador.id)
+            .then(res => {
 
-    }
+                this.showModalDel = false;
+                this.alert_text = res.data.mensagem;
+                this.jogadores.splice(jogadores.findIndex(item => item.id === jogador.id), 1);
+
+            })
+            .catch(error => {
+
+               this.modal_error_text = error.response.data.message;
+
+           })
+           break;
+
+        }
+        
+    } 
 
     function buscaTimes() {
 
@@ -92,7 +114,7 @@
        <Modal :show="showModal" @close="showModal = false">
 
         <div class="flex mb-5 border-bottom-gray-200 pb-2 grid grid-rows-1 grid-cols-2 grid-flow-col">
-            <h3 class="text-2xl ">Adicionar</h3>
+            <h3 class="text-2xl ">{{modal_title}}</h3>
             <button class="justify-self-end self-center text-gray-400 hover:text-gray-700" @click="showModal = false"><i class="fas fa-xmark"></i></button>
         </div>
 
@@ -101,9 +123,9 @@
               <p class="font-bold">{{modal_error_text}}</p>
               <button class="justify-self-end self-center text-gray-400 hover:text-gray-700" @click="modal_error_text = null"><i class="fas fa-xmark"></i></button>         
           </div>
-        </div>
+      </div>
 
-        <div>
+      <div>
           <InputLabel for="nome" value="Nome" />
 
           <TextInput
@@ -156,7 +178,7 @@
         Fechar
     </SecondaryButton>
 
-    <PrimaryButton class="ms-4" @click="adicionaJogador(jogador)">
+    <PrimaryButton class="ms-4" @click="salvaAcao(modal_action, jogador)">
         Salvar
     </PrimaryButton>
 
@@ -177,21 +199,21 @@
           <p class="font-bold">{{modal_error_text}}</p>
           <button class="justify-self-end self-center text-gray-400 hover:text-gray-700" @click="modal_error_text = null"><i class="fas fa-xmark"></i></button>         
       </div>
-    </div>
+  </div>
 
-    <p>Tem certeza que deseja deletar o Jogador #{{jogador_id}}?</p>
+  <p>Tem certeza que deseja deletar o Jogador #{{jogador.id}}?</p>
 
-    <div class="flex items-center justify-end mt-8">
+  <div class="flex items-center justify-end mt-8">
 
-        <SecondaryButton class="ms-4" @click="showModalDel = false">
-            Fechar
-        </SecondaryButton>
+    <SecondaryButton class="ms-4" @click="showModalDel = false">
+        Fechar
+    </SecondaryButton>
 
-        <PrimaryButton class="ms-4" @click="deletaJogador(jogador_id)">
-            Salvar
-        </PrimaryButton>
+    <PrimaryButton class="ms-4" @click="salvaAcao(modal_action, jogador)">
+        Salvar
+    </PrimaryButton>
 
-    </div>
+</div>
 
 </Modal>
 
@@ -207,7 +229,7 @@
   <div class="grid grid-rows-1 grid-cols-2 grid-flow-col gap-4 w-9/12 m-auto">
     <!--<div>-->
         <h2 class="text-3xl">Jogadores</h2>
-        <button class="justify-self-end bg-emerald-700 hover:bg-emerald-900 text-gray-100 font-bold py-2 px-4 hover:text-white rounded col-start-2"  @click="showModal = true; buscaTimes()">
+        <button class="justify-self-end bg-emerald-700 hover:bg-emerald-900 text-gray-100 font-bold py-2 px-4 hover:text-white rounded col-start-2"  @click="showModal = true; buscaTimes(); modal_title = 'Adicionar'; modal_action = 'adicionar'; jogador = {}">
           Novo
       </button>
       <!--</div>-->
@@ -228,8 +250,8 @@
             <td class=" px-4 py-2">{{element.numero_camiseta}}</td>
             <td class=" px-4 py-2">{{element.time.nome}}</td>
             <td class='text-center'>
-              <button type="button" class="text-xl text-gray-400 hover:text-gray-700" title="Editar" style="margin-right: 0.5em;"><i class="fas fa-pen-to-square"></i></button>
-              <button type="button" class="text-xl text-gray-400 hover:text-red-700" title="Deletar" style="margin-left: 0.5em;" @click="showModalDel = true; jogador_id = element.id"><i class="fas fa-xmark"></i></button>
+              <button type="button" class="text-xl text-gray-400 hover:text-gray-700" title="Editar" style="margin-right: 0.5em;"><i class="fas fa-pen-to-square" @click="showModal = true; modal_title = 'Editar'; jogador = element; modal_action = 'editar'; buscaTimes()"></i></button>
+              <button type="button" class="text-xl text-gray-400 hover:text-red-700" title="Deletar" style="margin-left: 0.5em;" @click="showModalDel = true; modal_action = 'deletar'; jogador = element"><i class="fas fa-xmark"></i></button>
           </td>
       </tr>
   </tbody>

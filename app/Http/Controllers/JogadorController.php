@@ -87,4 +87,34 @@ class JogadorController extends Controller
 
     }
 
+    public function update(Request $request, string $id): IlluminateResponse
+    {
+
+        try {
+
+            $request->validate([
+                'nome' => 'required|string|max:255',
+                'numero_camiseta' => 'required|int',
+                'time_id' => 'required|int',
+            ]);
+
+            $jogador = Jogador::find($id);
+            $jogador->nome = $request->nome;
+            $jogador->numero_camiseta = $request->numero_camiseta;
+            $jogador->time_id = $request->time_id;
+
+            $jogador->save();
+
+             return response(array("mensagem"=>"Jogador editado com sucesso."), 200)
+            ->header('Content-Type', 'text/plain');
+
+        }catch (QueryException $ex){
+
+            return response(array("mensagem"=>"Erro ao editar jogador no banco."), 500)
+            ->header('Content-Type', 'text/plain');
+
+        }
+
+    }
+
 }

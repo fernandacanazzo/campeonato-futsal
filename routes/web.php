@@ -46,6 +46,8 @@ Route::middleware('auth')->group(function () {
     )->name('jogadores.store');
     Route::delete('/jogador/{id}', [JogadorController::class, 'destroy']
     )->name('jogadores.destroy');
+    Route::patch('/jogador/{id}', [JogadorController::class, 'update']
+    )->name('jogadores.update');
     Route::get('/times', [TimeController::class, 'show']
     )->name('times.show');
 });
