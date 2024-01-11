@@ -10,6 +10,7 @@
     import { ref } from 'vue';
     import axios from 'axios';
     import VueDatePicker from '@vuepic/vue-datepicker';
+    import { ptBR } from 'date-fns/locale';
     import '@vuepic/vue-datepicker/dist/main.css'
 
     const props = defineProps({
@@ -39,7 +40,11 @@
 
             partida.time_id_1 = partida.time1.id;
             partida.time_id_2 = partida.time2.id;
-            
+
+            //corrigir horario por conta da timezone
+            partida.data_inicio.setHours(partida.data_inicio.getHours() - 3);
+            partida.data_termino.setHours(partida.data_termino.getHours() - 3);
+
             axios.post('/partidas', partida)
             .then(res => {
 
@@ -115,7 +120,7 @@
     }
 
     function guardaValorAntigo(obj_antigo, obj_novo, acao){//no caso do usuário cancelar a edição, voltar ao que era antes na lista de itens
-        
+
         if(acao == 'editar')
             Object.assign(obj_antigo, obj_novo);
 
@@ -161,7 +166,7 @@
 
           <InputLabel for="data_inicio" value="Data In&iacute;cio" />
 
-          <VueDatePicker v-model="partida.data_inicio" time-picker-inline></VueDatePicker>
+          <VueDatePicker v-model="partida.data_inicio" time-picker-inline :format-locale="ptBR" ></VueDatePicker>
 
       </div>
 
@@ -169,7 +174,7 @@
 
           <InputLabel for="data_termino" value="Data T&eacute;rmino" />
 
-          <VueDatePicker id="data_termino" v-model="partida.data_termino" time-picker-inline></VueDatePicker>
+          <VueDatePicker id="data_termino" v-model="partida.data_termino" time-picker-inline :min-date="new Date(partida.data_inicio)" :format-locale="ptBR"></VueDatePicker>
 
       </div>
 
@@ -178,7 +183,7 @@
         <InputLabel for="time_id1" value="Time 1" />
         <select v-model="partida.time1" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full" id="time_id1">
             <option disabled value="">Selecionar...</option>
-            <option v-for="(element, index) in times" 
+            <option v-show="element.id != partida.time2.id" v-for="(element, index) in times"
             :value="element">
             {{element.nome}}
             </option>
@@ -210,7 +215,7 @@
         <InputLabel for="time_id2" value="Time 2" />
         <select v-model="partida.time2" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full" id="time_id2">
             <option disabled value="">Selecionar...</option>
-            <option v-for="(element, index) in times" 
+            <option v-show="element.id != partida.time1.id" v-for="(element, index) in times" 
             :value="element">
             {{element.nome}}
             </option>
@@ -262,7 +267,7 @@
   <div class="grid grid-rows-1 grid-cols-2 grid-flow-col gap-4 w-9/12 m-auto">
     <!--<div>-->
         <h2 class="text-3xl">Partidas</h2>
-        <button class="justify-self-end bg-emerald-700 hover:bg-emerald-900 text-gray-100 font-bold py-2 px-4 hover:text-white rounded col-start-2"  @click="showModal = true; buscaTimes(); modal_title = 'Adicionar'; modal_action = 'adicionar'; partida = {}; modal_error_text = null; message = {}">
+        <button class="justify-self-end bg-emerald-700 hover:bg-emerald-900 text-gray-100 font-bold py-2 px-4 hover:text-white rounded col-start-2"  @click="showModal = true; buscaTimes(); modal_title = 'Adicionar'; modal_action = 'adicionar'; partida = {}; modal_error_text = null; message = {}; partida.time2 = ''; partida.time1 = ''">
           Novo
       </button>
       <!--</div>-->
