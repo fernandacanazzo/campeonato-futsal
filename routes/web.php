@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\JogadorController;
 use App\Http\Controllers\TimeController;
+use App\Http\Controllers\PartidaController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -17,16 +18,6 @@ use Inertia\Inertia;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-/*Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});*/
-
 
 Route::get('/login', function () {
     return Inertia::render('Login');
@@ -60,6 +51,16 @@ Route::middleware('auth')->group(function () {
     )->name('times.destroy');
     Route::patch('/time/{id}', [TimeController::class, 'update']
     )->name('times.update');
+
+    //partidas
+    Route::get('/partidas', [PartidaController::class, 'show']
+    )->name('partidas.show');
+    Route::post('/partidas', [PartidaController::class, 'store']
+    )->name('partidas.store');
+    Route::delete('/partida/{id}', [PartidaController::class, 'destroy']
+    )->name('partidas.destroy');
+    Route::patch('/partida/{id}', [PartidaController::class, 'update']
+    )->name('partidas.update');
 });
 
 require __DIR__.'/auth.php';

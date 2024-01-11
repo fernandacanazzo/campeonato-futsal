@@ -20,9 +20,22 @@ class Partida extends Model
         'placar_time_id_2',
     ]; 
 
-    public function time(){
+    protected $casts = [
+        'data_inicio' => 'datetime:d/m/Y, H:i',
+        'data_termino' => 'datetime:d/m/Y, H:i',
+    ];
 
-        return $this->belongsTo(Time::class);
+    public $timestamps = FALSE;
+
+    public function time1(){
+
+        return $this->belongsTo(Time::class, 'time_id_1');
+
+    }
+
+    public function time2(){
+
+        return $this->belongsTo(Time::class, 'time_id_2');
 
     }
 }

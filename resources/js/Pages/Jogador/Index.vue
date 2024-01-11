@@ -160,7 +160,7 @@
 
         <TextInput
         id="numero_camiseta"
-        type="text"
+        type="number"
         class="mt-1 block w-full"
         v-model="jogador.numero_camiseta"
         required
