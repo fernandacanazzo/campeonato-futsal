@@ -16,15 +16,6 @@ use Illuminate\Database\Eloquent\Collection;
 class ClassificacaoController extends Controller
 {
 
-    public function getClassificacao(): Collection
-    {   
-
-        $classificacao = Classificacao::with(['time'])->orderBy('classificacao.pontos', 'DESC')->get();
-
-        return $classificacao;
-
-    }
-
     public static function calculaClassificacao($time_id_1, $time_id_2, $placar_time_id_1, $placar_time_id_2, $acao = ''){           
         
         if($acao != 'deletar'){

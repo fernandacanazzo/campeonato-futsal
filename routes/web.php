@@ -4,6 +4,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\JogadorController;
 use App\Http\Controllers\TimeController;
 use App\Http\Controllers\PartidaController;
+use App\Http\Controllers\ClassificacaoController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -23,9 +25,7 @@ Route::get('/login', function () {
     return Inertia::render('Login');
 });
 
-Route::get('/', function () {
-    return Inertia::render('Home');
-})->middleware(['auth', 'verified'])->name('home');
+Route::get('/', [HomeController::class, 'show'])->middleware(['auth', 'verified'])->name('home');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -61,6 +61,7 @@ Route::middleware('auth')->group(function () {
     )->name('partidas.destroy');
     Route::patch('/partida/{id}', [PartidaController::class, 'update']
     )->name('partidas.update');
+
 });
 
 require __DIR__.'/auth.php';
