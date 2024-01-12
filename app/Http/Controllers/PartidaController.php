@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Partida;
+use App\Http\Controllers\ClassificacaoController;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Http\Middleware\HandleInertiaRequests;
@@ -67,6 +68,8 @@ class PartidaController extends Controller
 
             $partida = $this->getPartidas($partida->id);
 
+            ClassificacaoController::calculaClassificacao($request->time_id_1, $request->time_id_2, $request->placar_time_id_1, $request->placar_time_id_2);
+
             return response(array("mensagem"=>"Partida criada com sucesso.", "partida"=>$partida), 200)
             ->header('Content-Type', 'text/plain');
 
@@ -85,7 +88,15 @@ class PartidaController extends Controller
         try {
 
             $partida = Partida::find($id);
+
+            $time_id_1 = $partida->time_id_1;
+            $time_id_2 = $partida->time_id_2;
+            $placar_time_id_1 = $partida->placar_time_id_1;
+            $placar_time_id_2 = $partida->placar_time_id_2;        
+
             $partida->delete();
+
+            ClassificacaoController::calculaClassificacao($time_id_1, $time_id_2, $placar_time_id_1, $placar_time_id_2, 'deletar');
 
             return response(array("mensagem"=>"Partida excluida com sucesso."), 200)
             ->header('Content-Type', 'text/plain');
@@ -120,6 +131,13 @@ class PartidaController extends Controller
             $data_termino = $data_termino[0] . " " . substr($data_termino[1], 0, 8);
 
             $partida = Partida::find($id);
+
+            //guarda os valores antigos para calculo da classificação
+            $time_id_1 = $partida->time_id_1;
+            $time_id_2 = $partida->time_id_2;
+            $placar_time_id_1 = $partida->placar_time_id_1;
+            $placar_time_id_2 = $partida->placar_time_id_2;
+
             $partida->data_inicio = $data_inicio;
             $partida->data_termino = $data_termino;
             $partida->time_id_1 = $request->time_id_1;
@@ -128,6 +146,11 @@ class PartidaController extends Controller
             $partida->placar_time_id_2 = $request->placar_time_id_2;
 
             $partida->save();
+
+            //subtrai os valores antigos da classificacao
+            ClassificacaoController::calculaClassificacao($time_id_1, $time_id_2, $placar_time_id_1, $placar_time_id_2, 'deletar');
+
+            ClassificacaoController::calculaClassificacao($request->time_id_1, $request->time_id_2, $request->placar_time_id_1, $request->placar_time_id_2);
 
             return response(array("mensagem"=>"Partida editada com sucesso."), 200)
             ->header('Content-Type', 'text/plain');

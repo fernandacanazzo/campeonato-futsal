@@ -64,6 +64,9 @@
 
             case 'editar':
 
+            partida.time_id_1 = partida.time1.id;
+            partida.time_id_2 = partida.time2.id;
+
             axios.patch('/partida/'+partida.id, partida)
             .then(res => {
 

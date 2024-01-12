@@ -17,6 +17,8 @@ class Classificacao extends Model
         'qtd_gols',
     ]; 
 
+    public $timestamps = FALSE;
+    
     public function time(){
 
         return $this->belongsTo(Time::class);
