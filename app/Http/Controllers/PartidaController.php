@@ -29,12 +29,22 @@ class PartidaController extends Controller
 
     }
 
-    public function show(): Response
+    public function show(Request $request)
     {   
 
         $partidas = $this->getPartidas();
 
-        return Inertia::render('Partida/Index',['partidas'=>$partidas]);
+        if(!str_contains($request->getRequestUri(), "/api/")){
+
+            return Inertia::render('Partida/Index',['partidas'=>$partidas]);
+
+        }else{// se vier da API
+
+            return response(array("partidas"=>$partidas), 200)
+            ->header('Content-Type', 'application/json');
+
+        }
+        
     }
 
     public function store(Request $request): IlluminateResponse

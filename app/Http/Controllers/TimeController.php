@@ -28,13 +28,20 @@ class TimeController extends Controller
 
     }
 
-    public function show(): Response
+    public function show(Request $request)
     {   
-
 
         $times = $this->getTimes();
 
-        return Inertia::render('Time/Index',['times'=>$times]);
+        if(!str_contains($request->getRequestUri(), "/api/")){
+
+            return Inertia::render('Time/Index',['times'=>$times]);
+
+        }else{// se vier da API
+
+            return $this->busca();
+
+        }
 
     }
 
@@ -44,7 +51,7 @@ class TimeController extends Controller
         $times = Time::orderBy('nome')->get();
 
         return response(array("times"=>$times), 200)
-            ->header('Content-Type', 'text/plain');
+            ->header('Content-Type', 'application/json');
 
     }
 

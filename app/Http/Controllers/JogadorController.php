@@ -28,12 +28,22 @@ class JogadorController extends Controller
 
     }
 
-    public function show(): Response
+    public function show(Request $request)
     {   
 
         $jogadores = $this->getJogadores();
 
-        return Inertia::render('Jogador/Index',['jogadores'=>$jogadores]);
+        if(!str_contains($request->getRequestUri(), "/api/")){
+
+            return Inertia::render('Jogador/Index',['jogadores'=>$jogadores]);
+
+        }else{// se vier da API
+
+            return response(array("jogadores"=>$jogadores), 200)
+            ->header('Content-Type', 'application/json');
+
+        }
+
     }
 
     public function store(Request $request): IlluminateResponse
