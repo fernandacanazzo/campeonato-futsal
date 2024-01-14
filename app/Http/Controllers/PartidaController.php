@@ -157,12 +157,14 @@ class PartidaController extends Controller
 
             $partida->save();
 
+            $partida = $this->getPartidas($id);
+
             //subtrai os valores antigos da classificacao
             ClassificacaoController::calculaClassificacao($time_id_1, $time_id_2, $placar_time_id_1, $placar_time_id_2, 'deletar');
 
             ClassificacaoController::calculaClassificacao($request->time_id_1, $request->time_id_2, $request->placar_time_id_1, $request->placar_time_id_2);
 
-            return response(array("mensagem"=>"Partida editada com sucesso."), 200)
+            return response(array("mensagem"=>"Partida editada com sucesso.", "partida"=>$partida), 200)
             ->header('Content-Type', 'text/plain');
 
         }catch (QueryException $ex){

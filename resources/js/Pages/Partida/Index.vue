@@ -10,7 +10,6 @@
     import { ref } from 'vue';
     import axios from 'axios';
     import VueDatePicker from '@vuepic/vue-datepicker';
-    import { ptBR } from 'date-fns/locale';
     import '@vuepic/vue-datepicker/dist/main.css'
 
     const props = defineProps({
@@ -67,11 +66,15 @@
             partida.time_id_1 = partida.time1.id;
             partida.time_id_2 = partida.time2.id;
 
+            //corrigir horario por conta da timezone
+            partida.data_inicio.setHours(partida.data_inicio.getHours() - 3);
+            partida.data_termino.setHours(partida.data_termino.getHours() - 3);
+
             axios.patch('/partida/'+partida.id, partida)
             .then(res => {
 
-                partida.data_inicio = new Date(partida.data_inicio).toLocaleString("pt-BR");
-                partida.data_termino = new Date(partida.data_termino).toLocaleString("pt-BR");
+                let index = partidas.findIndex(item => item.id === partida.id) 
+                partidas[index] = res.data.partida[0];
 
                 this.showModal = false;
                 this.alert_text = res.data.mensagem;
@@ -169,7 +172,7 @@
 
           <InputLabel for="data_inicio" value="Data In&iacute;cio" />
 
-          <VueDatePicker v-model="partida.data_inicio" time-picker-inline :format-locale="ptBR" ></VueDatePicker>
+          <VueDatePicker v-model="partida.data_inicio" time-picker-inline locale="pt-br" ></VueDatePicker>
 
       </div>
 
@@ -177,7 +180,7 @@
 
           <InputLabel for="data_termino" value="Data T&eacute;rmino" />
 
-          <VueDatePicker id="data_termino" v-model="partida.data_termino" time-picker-inline :min-date="new Date(partida.data_inicio)" :format-locale="ptBR"></VueDatePicker>
+          <VueDatePicker id="data_termino" v-model="partida.data_termino" time-picker-inline :min-date="new Date(partida.data_inicio)" locale="pt-br" ></VueDatePicker>
 
       </div>
 
