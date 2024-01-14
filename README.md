@@ -6,9 +6,9 @@ Servidor XAMPP (PHP 8.2 + 10.9.8-MariaDB)
 
 Laravel 10 REST API + Vue 3 (http://localhost:8000)
 
-- Método Autorização: Laravel Sanctum 
-Acesso APP via web: Sessão/Cookie
-Acesso endpoints API via client: Bearer token
+- Método Autorização: Laravel Sanctum
+1. Acesso APP via web: Sessão/Cookie
+2. Acesso endpoints API via client: Bearer token
 
 - Páginas:
 1. Tela inicial login (/login)
